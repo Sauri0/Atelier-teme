@@ -438,37 +438,45 @@
     const form = document.getElementById('product-form-{{ section.id }}');
     if (!form) return;
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const btn = document.getElementById('main-atc-submit');
-      btn.classList.add('loading');
-      btn.innerText = 'Adding...';
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('main-atc-submit');
+        if (!btn) return;
 
-      let formData = new FormData(form);
+        btn.classList.add('loading');
+        btn.innerText = 'ADDING TO COLLECTION...';
 
-      fetch(window.Shopify.routes.root + 'cart/add.js', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => {
-        return response.json();
-      })
-      .then(response => {
-        // Trigger Side Cart logic (to be handled by global.js)
-        document.dispatchEvent(new CustomEvent('cart:updated'));
-        
-        btn.classList.remove('loading');
-        btn.innerText = 'Added!';
-        setTimeout(() => {
-          btn.innerText = 'Add to Cart';
-        }, 2000);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        btn.classList.remove('loading');
-        btn.innerText = 'Error';
+        let formData = new FormData(form);
+
+        fetch(window.Shopify.routes.root + 'cart/add.js', {
+          method: 'POST',
+          body: formData,
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Cart addition failed');
+          return response.json();
+        })
+        .then(item => {
+          console.log('Product added successfully:', item);
+          // Trigger the Cart Drawer
+          document.dispatchEvent(new CustomEvent('cart:updated'));
+          
+          btn.innerText = 'ADDED SUCCESSFULLY';
+          setTimeout(() => {
+            btn.classList.remove('loading');
+            btn.innerText = 'ADD TO CART';
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error('Add to Cart Error:', error);
+          btn.classList.remove('loading');
+          btn.innerText = 'RETRY ADD';
+          alert('Could not add to cart. Please check stock or try again.');
+        });
       });
-    });
+    }
   });
 </script>
 

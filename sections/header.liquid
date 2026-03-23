@@ -89,13 +89,9 @@
       </localization-form>
     </div>
 
-    <!-- Logo + Wordmark -->
+    <!-- Text-Only Branding -->
     <a href="/" class="header-logo-wrapper">
-      <svg class="brand-logo-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 2L4 34H12L20 18L28 34H36L20 2Z" />
-        <rect x="16" y="24" width="8" height="2" />
-      </svg>
-      <span class="brand-wordmark">{{ shop.name }}</span>
+      <span class="brand-wordmark" style="font-family: var(--font-heading); font-weight: 800; font-size: 1.5rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--color-accent);">ATELIER</span>
     </a>
 
     <!-- Dynamic Main Navigation -->
@@ -132,6 +128,28 @@
     </div>
   </div>
 </header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Elite Localization Handler
+    const localizationForms = document.querySelectorAll('localization-form form');
+    localizationForms.forEach(form => {
+      const buttons = form.querySelectorAll('.selector-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const name = btn.getAttribute('name');
+          const value = btn.getAttribute('value');
+          const hiddenInput = form.querySelector(`input[name="${name}"]`);
+          if (hiddenInput) {
+            hiddenInput.value = value;
+            form.submit();
+          }
+        });
+      });
+    });
+  });
+</script>
 
 {% schema %}
 {
