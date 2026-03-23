@@ -1,8 +1,8 @@
 {
-  "layout": "theme",
   "sections": {
     "main": {
-      "type": "collection-list"
+      "type": "main-collection",
+      "settings": {}
     }
   },
   "order": [

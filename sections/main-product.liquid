@@ -178,6 +178,83 @@
     pointer-events: none;
   }
 
+  /* Accordions */
+  .product-details-accordion {
+    margin-top: var(--spacing-lg);
+    border-top: 1px solid rgba(27, 38, 59, 0.05);
+  }
+
+  .details-item {
+    border-bottom: 1px solid rgba(27, 38, 59, 0.05);
+  }
+
+  .details-summary {
+    list-style: none;
+    padding: 20px 0;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .details-summary::-webkit-details-marker { display: none; }
+
+  .details-summary::after {
+    content: '+';
+    font-size: 1.2rem;
+    font-weight: 300;
+    transition: transform 0.3s ease;
+  }
+
+  details[open] .details-summary::after {
+    transform: rotate(45deg);
+  }
+
+  .details-content {
+    padding-bottom: 20px;
+    color: var(--color-text-light);
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  /* Trust Badges v2 (Vector) */
+  .trust-badges-v2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: var(--spacing-xl);
+    padding: 24px;
+    background: var(--color-surface);
+    border-radius: var(--border-radius);
+  }
+
+  .badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+
+  .badge-icon {
+    width: 24px;
+    height: 24px;
+    stroke: var(--color-primary);
+    stroke-width: 1.5px;
+  }
+
+  .badge-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+  }
 </style>
 
 <section class="product-section container animate-fade-up">
@@ -302,8 +379,50 @@
             </div>
 
           {%- when 'description' -%}
-            <div class="product-description" style="margin-top: var(--spacing-lg);" {{ block.shopify_attributes }}>
-              {{ product.description }}
+            <div class="product-details-accordion" {{ block.shopify_attributes }}>
+              <details class="details-item" open>
+                <summary class="details-summary">Description</summary>
+                <div class="details-content">
+                  {{ product.description }}
+                </div>
+              </details>
+              
+              <details class="details-item">
+                <summary class="details-summary">Materials & Care</summary>
+                <div class="details-content">
+                  <p>Hand-selected premium materials. Professional dry clean only. Handle with the utmost care to preserve the longevity of the exquisite craftsmanship.</p>
+                </div>
+              </details>
+
+              <details class="details-item">
+                <summary class="details-summary">Shipping & Returns</summary>
+                <div class="details-content">
+                  <p>Complimentary global shipping on all orders. Returns accepted within 14 days of delivery in original condition and packaging.</p>
+                </div>
+              </details>
+            </div>
+
+            <!-- Trust Badges v2 -->
+            <div class="trust-badges-v2">
+              <div class="badge-item">
+                <svg class="badge-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="badge-text">Secure Payment</span>
+              </div>
+              <div class="badge-item">
+                <svg class="badge-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="badge-text">Authenticity</span>
+              </div>
+              <div class="badge-item">
+                <svg class="badge-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="1" y="3" width="15" height="13" rx="2" ry="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 8l4-4v11l-4-3V8z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="badge-text">Luxury Logistics</span>
+              </div>
             </div>
             
         {%- endcase -%}

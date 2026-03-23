@@ -4,46 +4,43 @@
 
 {{ 'global.css' | asset_url | stylesheet_tag }}
 <style>
-  .header-wrapper {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Sticky Refinement */
+  .header-wrapper.is-sticky {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 30px rgba(27, 38, 59, 0.05);
   }
   
   .header-inner {
     height: 80px;
+    transition: height 0.3s ease;
+  }
+  
+  .is-sticky .header-inner {
+    height: 64px;
   }
 
-  /* Market Selectors (Shopify Markets) */
-  .market-selectors {
-    display: none;
-  }
-  
-  @media (min-width: 1024px) {
-    .market-selectors {
-      display: flex;
-      gap: 12px;
-    }
+  /* Logo + Wordmark Alignment */
+  .header-logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
-  .predictive-search {
-    flex-grow: 1;
-    max-width: 400px;
-    margin: 0 32px;
+  .brand-logo-svg {
+    width: 32px;
+    height: 32px;
+    fill: var(--color-accent);
   }
-  
-  .search-input {
-    width: 100%;
-    padding: 10px 16px;
-    border-radius: 24px;
-    border: none;
-    background: var(--color-surface);
-    font-family: var(--font-body);
-  }
-  
-  .search-input:focus {
-    outline: 2px solid var(--color-primary);
+
+  .brand-wordmark {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.01em;
+    color: var(--color-accent);
+    text-transform: uppercase;
   }
 </style>
 
@@ -71,13 +68,13 @@
       {% endform %}
     </div>
 
-    <!-- Logo -->
-    <a href="{{ routes.root_url }}" class="header-logo">
-      {%- if section.settings.logo != blank -%}
-        <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" width="{{ section.settings.logo_width }}" loading="lazy">
-      {%- else -%}
-        <h2>{{ shop.name }}</h2>
-      {%- endif -%}
+    <!-- Logo + Wordmark -->
+    <a href="{{ routes.root_url }}" class="header-logo-wrapper">
+      <svg class="brand-logo-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 2L4 34H12L20 18L28 34H36L20 2Z" />
+        <rect x="16" y="24" width="8" height="2" />
+      </svg>
+      <span class="brand-wordmark">{{ shop.name }}</span>
     </a>
 
     <!-- Dynamic Main Navigation -->

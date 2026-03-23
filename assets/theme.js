@@ -8,11 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (header) {
     window.addEventListener('scroll', () => {
       if (window.scrollY > 20) {
-        header.style.padding = '8px 0';
-        header.style.background = 'rgba(255, 255, 255, 0.9)';
+        header.classList.add('is-sticky');
       } else {
-        header.style.padding = '';
-        header.style.background = '';
+        header.classList.remove('is-sticky');
       }
     });
   }
