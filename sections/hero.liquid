@@ -37,9 +37,12 @@
     position: relative;
     z-index: 1;
     max-width: 600px;
-    padding: var(--spacing-xl);
+    padding: 24px;
     text-align: {{ section.settings.text_alignment }};
     color: #FFF;
+  }
+  @media(min-width: 768px) {
+    .hero-content { padding: var(--spacing-xl); }
   }
 
   .hero-heading {
@@ -66,13 +69,13 @@
   {%- if section.settings.video != blank -%}
     {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, class: 'hero-media' }}
   {%- elsif section.settings.external_image != blank -%}
-    <img src="{{ section.settings.external_image }}" alt="Hero Background" class="hero-media" loading="eager">
+    <img src="{{ section.settings.external_image }}" alt="Hero Background" class="hero-media" loading="lazy">
   {%- elsif section.settings.image != blank -%}
     <img 
       src="{{ section.settings.image | image_url: width: 2000 }}" 
       alt="{{ section.settings.image.alt | escape }}" 
       class="hero-media"
-      loading="eager"
+      loading="lazy"
       width="{{ section.settings.image.width }}"
       height="{{ section.settings.image.height }}"
     >

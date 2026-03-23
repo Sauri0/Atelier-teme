@@ -200,6 +200,14 @@
       <div class="footer-copyright">
         &copy; {{ 'now' | date: "%Y" }}, {{ shop.name | link_to: '/' }}. All rights reserved.
       </div>
+      
+      <!-- Dynamic Socials -->
+      <div style="display:flex; gap:16px;">
+        {%- if section.settings.social_instagram != blank -%}<a href="{{ section.settings.social_instagram }}" style="color:#FFF;">Instagram</a>{%- endif -%}
+        {%- if section.settings.social_tiktok != blank -%}<a href="{{ section.settings.social_tiktok }}" style="color:#FFF;">TikTok</a>{%- endif -%}
+        {%- if section.settings.social_twitter != blank -%}<a href="{{ section.settings.social_twitter }}" style="color:#FFF;">X (Twitter)</a>{%- endif -%}
+      </div>
+
       <div class="payment-icons">
         {%- for type in shop.enabled_payment_types -%}
           <span class="payment-icon">
@@ -247,6 +255,25 @@
       "id": "linklist_2_title",
       "label": "Support Menu Title",
       "default": "Information"
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "social_tiktok",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "social_twitter",
+      "label": "X (Twitter) URL"
     }
   ]
 }
