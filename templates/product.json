@@ -1,5 +1,6 @@
 {
   "layout": "theme",
+  "sync_hook": "v2.2-emergency",
   "sections": {
     "main": {
       "type": "main-product"
