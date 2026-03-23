@@ -1,0 +1,137 @@
+{% comment %}
+  Mobile Sticky Add to Cart (Glassmorphism)
+{% endcomment %}
+
+<style>
+  .sticky-atc-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    z-index: 50;
+    padding: var(--spacing-md);
+    
+    /* Glassmorphism setup */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 -10px 30px rgba(27, 38, 59, 0.08); /* Navy Green tinted shadow */
+  }
+
+  /* Active state */
+  .sticky-atc-bar.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .sticky-atc-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+  }
+
+  .sticky-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+  }
+
+  .sticky-title {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sticky-price {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-accent); /* Navy Green */
+  }
+
+  .sticky-btn {
+    flex-shrink: 0;
+    padding: 12px 24px;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #006a65, var(--color-primary));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-subtle);
+  }
+
+  @media (min-width: 768px) {
+    .sticky-atc-bar {
+      /* Hidden on desktop since we have a sticky right column */
+      display: none !important;
+    }
+  }
+</style>
+
+<div class="sticky-atc-bar" id="MobileStickyATC">
+  <div class="container sticky-atc-inner">
+    <div class="sticky-info">
+      <span class="sticky-title">{{ product.title | escape }}</span>
+      <span class="sticky-price">{{ product.price | money }}</span>
+    </div>
+    <button class="sticky-btn" onclick="triggerMainATC()">
+      Add to Cart
+    </button>
+  </div>
+</div>
+
+<script>
+  function triggerMainATC() {
+    // Triggers the main form submission which handles the AJAX sequence
+    const mainSubmit = document.getElementById('main-atc-submit');
+    if (mainSubmit) {
+      mainSubmit.click();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const stickyBar = document.getElementById('MobileStickyATC');
+    const mainAtcBtn = document.getElementById('main-atc-submit');
+
+    if (!stickyBar || !mainAtcBtn) return;
+
+    // Intersection Observer to show sticky bar when main ATC leaves viewport
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          // Main button is out of view
+          stickyBar.classList.add('is-visible');
+        } else {
+          // Main button is in view
+          stickyBar.classList.remove('is-visible');
+        }
+      });
+    }, {
+      root: null,
+      threshold: 0,
+      rootMargin: "0px 0px -50px 0px" // Trigger slightly before it fully disappears
+    });
+
+    observer.observe(mainAtcBtn);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Mobile Sticky ATC",
+  "settings": []
+}
+{% endschema %}

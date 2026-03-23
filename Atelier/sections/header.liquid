@@ -1,0 +1,142 @@
+{% comment %}
+  Global Header Section
+{% endcomment %}
+
+{{ 'global.css' | asset_url | stylesheet_tag }}
+<style>
+  .header-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .header-inner {
+    height: 80px;
+  }
+
+  /* Market Selectors (Shopify Markets) */
+  .market-selectors {
+    display: none;
+  }
+  
+  @media (min-width: 1024px) {
+    .market-selectors {
+      display: flex;
+      gap: 12px;
+    }
+  }
+
+  .predictive-search {
+    flex-grow: 1;
+    max-width: 400px;
+    margin: 0 32px;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 24px;
+    border: none;
+    background: var(--color-surface);
+    font-family: var(--font-body);
+  }
+  
+  .search-input:focus {
+    outline: 2px solid var(--color-primary);
+  }
+</style>
+
+<header class="header-wrapper glass-panel">
+  <div class="container header-inner flex items-center justify-between">
+    
+    <!-- Markets Selector (Desktop) -->
+    <div class="market-selectors items-center">
+      {% form 'localization' %}
+        <select name="country_code" class="localization-select">
+          {% for country in localization.available_countries %}
+            <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected{% endif %}>
+              {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+            </option>
+          {% endfor %}
+        </select>
+        
+        <select name="language_code" class="localization-select">
+          {% for language in localization.available_languages %}
+            <option value="{{ language.iso_code }}" {% if language.iso_code == localization.language.iso_code %}selected{% endif %}>
+              {{ language.endonym_name | capitalize }}
+            </option>
+          {% endfor %}
+        </select>
+      {% endform %}
+    </div>
+
+    <!-- Logo -->
+    <a href="{{ routes.root_url }}" class="header-logo">
+      {%- if section.settings.logo != blank -%}
+        <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" width="{{ section.settings.logo_width }}" loading="lazy">
+      {%- else -%}
+        <h2>{{ shop.name }}</h2>
+      {%- endif -%}
+    </a>
+
+    <!-- Predictive Search -->
+    <div class="predictive-search hidden-mobile">
+      <form action="{{ routes.search_url }}" method="get" role="search">
+        <input type="search" name="q" placeholder="Search premium products..." class="search-input">
+      </form>
+    </div>
+
+    <!-- Icons / Cart -->
+    <div class="header-icons flex items-center gap-md">
+      <!-- Search mobile trigger -->
+      <button class="icon-btn search-trigger-mobile show-mobile">
+        {% render 'icon-search' %}
+      </button>
+      
+      <!-- User Account -->
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="icon-btn">
+          {% render 'icon-account' %}
+        </a>
+      {%- endif -%}
+      
+      <!-- Side Cart Trigger -->
+      <a href="{{ routes.cart_url }}" class="icon-btn cart-trigger" id="cart-icon-bubble">
+        {% render 'icon-cart' %}
+        <div class="cart-count-bubble">
+          {%- if cart.item_count > 0 -%}
+            <span aria-hidden="true">{{ cart.item_count }}</span>
+          {%- endif -%}
+        </div>
+      </a>
+      
+      <!-- Mobile Hamburger -->
+      <button class="icon-btn hamburger-trigger show-mobile">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Global Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Brand Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 250,
+      "step": 10,
+      "default": 120,
+      "unit": "px",
+      "label": "Logo Width"
+    }
+  ]
+}
+{% endschema %}

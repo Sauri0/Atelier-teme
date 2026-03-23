@@ -1,0 +1,133 @@
+/* ============================================================================
+   GLOBAL CSS FRAMEWORK - Atelier Theme
+   ============================================================================== */
+
+:root {
+  /* Brand Colors */
+  --color-primary: #20B2AA; /* Aqua Green */
+  --color-accent: #1B263B; /* Navy Green / Teal */
+  --color-bg: #FFFFFF;
+  --color-surface: #F8FAFB;
+  --color-text-main: #1B263B;
+  --color-text-light: #5A647C;
+  
+  /* Typography */
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  
+  /* UI Specs */
+  --border-radius: 12px;
+  --shadow-subtle: 0px 8px 24px rgba(27, 38, 59, 0.08); /* Navy tinted shadow */
+  --shadow-hover: 0px 12px 32px rgba(27, 38, 59, 0.12);
+  --transition-base: all 0.3s ease-in-out;
+  
+  /* Spacing */
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 32px;
+  --spacing-xl: 64px;
+}
+
+/* Base Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-accent);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition-base);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-base);
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #006a65, var(--color-primary));
+  color: white;
+  box-shadow: var(--shadow-subtle);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Layout Classes (Mobile First Flex/Grid) */
+.container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+
+.grid { display: grid; }
+.gap-md { gap: var(--spacing-md); }
+.gap-lg { gap: var(--spacing-lg); }
+
+@media (min-width: 768px) {
+  .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Skeleton Loading (Retención visual) */
+.skeleton {
+  background: #ECEEEF;
+  background: linear-gradient(110deg, #eceeef 8%, #f2f4f5 18%, #eceeef 33%);
+  border-radius: var(--border-radius);
+  background-size: 200% 100%;
+  animation: 1.5s shine linear infinite;
+}
+@keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
+}

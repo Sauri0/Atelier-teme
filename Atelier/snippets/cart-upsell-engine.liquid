@@ -1,0 +1,133 @@
+{% comment %}
+  Cart Upsell Engine
+  Recommends products from the collection of the first item in the cart.
+{% endcomment %}
+
+<style>
+  .cart-upsell {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid rgba(27, 38, 59, 0.1);
+  }
+
+  .cart-upsell-title {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .cart-upsell-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: var(--spacing-sm);
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+  .cart-upsell-grid::-webkit-scrollbar { display: none; }
+
+  .upsell-card {
+    flex: 0 0 calc(50% - 4px);
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg);
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 2px 8px rgba(27, 38, 59, 0.05);
+  }
+
+  .upsell-image {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .upsell-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .upsell-title {
+    font-size: 0.8rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .upsell-price {
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .upsell-btn {
+    margin-top: auto;
+    background: var(--color-surface);
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-base);
+  }
+
+  .upsell-btn:hover {
+    background: var(--color-primary);
+    color: white;
+  }
+</style>
+
+{%- if cart.item_count > 0 -%}
+  {%- assign first_item = cart.items.first -%}
+  {%- assign upsell_collection = blank -%}
+  
+  {%- for collection in first_item.product.collections -%}
+    {%- if collection.all_products_count > 0 -%}
+      {%- assign upsell_collection = collection -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if upsell_collection != blank -%}
+    <div class="cart-upsell">
+      <h4 class="cart-upsell-title">Pair it with</h4>
+      <div class="cart-upsell-grid">
+        {%- assign upsell_count = 0 -%}
+        {%- for upsell_product in upsell_collection.products -%}
+          {%- if upsell_product.id != first_item.product.id and upsell_product.available -%}
+            
+            <div class="upsell-card">
+              <a href="{{ upsell_product.url }}">
+                <img src="{{ upsell_product.featured_image | image_url: width: 200 }}" 
+                     alt="{{ upsell_product.title | escape }}" 
+                     class="upsell-image" loading="lazy" width="200" height="200">
+              </a>
+              <div class="upsell-info">
+                <span class="upsell-title">{{ upsell_product.title | escape }}</span>
+                <span class="upsell-price">{{ upsell_product.price | money }}</span>
+              </div>
+              <button class="upsell-btn js-quick-add" data-variant-id="{{ upsell_product.selected_or_first_available_variant.id }}">
+                + Add
+              </button>
+            </div>
+            
+            {%- assign upsell_count = upsell_count | plus: 1 -%}
+            {%- if upsell_count == 4 -%}{%- break -%}{%- endif -%}
+            
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}

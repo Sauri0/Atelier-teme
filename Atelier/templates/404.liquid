@@ -1,0 +1,73 @@
+{% comment %}
+  Atelier - 404 Error Page
+{% endcomment %}
+
+<style>
+  .page-404 {
+    padding: var(--spacing-xl) 0;
+    max-width: 600px;
+    margin: 10vh auto;
+    text-align: center;
+  }
+
+  .error-code {
+    font-size: 6rem;
+    font-family: var(--font-heading);
+    color: var(--color-accent); /* Navy Green #1B263B */
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: var(--spacing-sm);
+    letter-spacing: -0.05em;
+  }
+
+  .error-title {
+    font-size: 2rem;
+    font-family: var(--font-heading);
+    color: var(--color-text-main);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .error-message {
+    font-family: var(--font-body);
+    color: var(--color-text-light);
+    font-size: 1rem;
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.6;
+  }
+
+  .btn-404 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 36px;
+    background: var(--color-primary); /* Aqua Green #20B2AA */
+    color: white;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    transition: var(--transition-base);
+    min-height: 48px; /* Thumb-friendly A11y minimum */
+    min-width: 48px;
+  }
+
+  .btn-404:hover {
+    background: #178a84;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+</style>
+
+<div class="container page-404">
+  <div class="error-code">404</div>
+  <h1 class="error-title">Page Not Found</h1>
+  <p class="error-message">
+    The page you are looking for might have been removed, had its name changed, or is temporarily unavailable. 
+    Discover our latest collections instead.
+  </p>
+  <a href="{{ routes.all_products_collection_url }}" class="btn-404">
+    Return to Shop
+  </a>
+</div>
