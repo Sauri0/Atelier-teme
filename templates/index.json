@@ -28,67 +28,46 @@
           }
         }
       },
-      "block_order": [
-        "heading",
-        "text",
-        "buttons"
-      ]
+      "block_order": [ "heading", "text", "buttons" ]
     },
     "trust-banner": {
       "type": "trust-banner",
       "blocks": {
-        "shipping": {
-          "type": "benefit",
-          "settings": {
-            "title": "Worldwide Shipping",
-            "icon": "✈️"
-          }
-        },
-        "secure": {
-          "type": "benefit",
-          "settings": {
-            "title": "Secure Checkout",
-            "icon": "🔒"
-          }
-        },
-        "support": {
-          "type": "benefit",
-          "settings": {
-            "title": "24/7 Support",
-            "icon": "💬"
-          }
-        },
-        "materials": {
-          "type": "benefit",
-          "settings": {
-            "title": "Premium Materials",
-            "icon": "✨"
-          }
-        }
+        "shipping": { "type": "benefit", "settings": { "title": "Global Shipping", "icon": "✈️" } },
+        "secure": { "type": "benefit", "settings": { "title": "Secure Payments", "icon": "💳" } },
+        "support": { "type": "benefit", "settings": { "title": "24/7 Concierge", "icon": "💬" } },
+        "materials": { "type": "benefit", "settings": { "title": "Premium Quality", "icon": "✨" } }
       },
-      "block_order": [
-        "shipping",
-        "secure",
-        "support",
-        "materials"
-      ]
+      "block_order": [ "shipping", "materials", "secure", "support" ]
     },
     "featured": {
       "type": "featured-products",
       "settings": {
-        "title": "Exclusive Curated Selection",
+        "title": "The Atelier Core",
         "products_to_show": 4
       }
     },
-    "testimonials": {
-      "type": "testimonials",
-      "settings": {}
+    "brand-story": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1000&auto=format&fit=crop",
+        "title": "Minimalist Architecture Applied to Lifestyle",
+        "text": "Every detail matters. We strip away the unnecessary, leaving only what is essential and beautiful."
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "title": "Join the Atelier Circle",
+        "text": "Get exclusive access to new drops."
+      }
     }
   },
   "order": [
     "hero",
     "trust-banner",
     "featured",
-    "testimonials"
+    "brand-story",
+    "newsletter"
   ]
 }

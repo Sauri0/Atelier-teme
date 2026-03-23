@@ -1,0 +1,38 @@
+{% comment %}
+  Global Newsletter Section
+{% endcomment %}
+
+<style>
+  .newsletter-section { background-color: var(--color-surface); padding: 80px 20px; text-align: center; margin-top: var(--spacing-xl); }
+  .nl-container { max-width: 600px; margin: 0 auto; }
+  .nl-title { font-family: var(--font-heading); color: var(--color-accent); font-size: 2rem; margin-bottom: 16px; }
+  .nl-desc { color: var(--color-text-light); margin-bottom: 32px; font-size: 1.1rem; }
+  .nl-form { display: flex; gap: 8px; flex-direction: column; }
+  @media(min-width: 768px) { .nl-form { flex-direction: row; } }
+  .nl-input { flex-grow: 1; padding: 16px 24px; border: 1px solid #D1D5DB; border-radius: var(--border-radius); font-size: 1rem; font-family: var(--font-body); }
+  .nl-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(32,178,170,0.1); }
+  .nl-btn { padding: 16px 32px; white-space: nowrap; }
+</style>
+
+<div class="newsletter-section">
+  <div class="nl-container">
+    <h2 class="nl-title">{{ section.settings.title }}</h2>
+    <p class="nl-desc">{{ section.settings.text }}</p>
+    <form method="post" action="/contact#contact_form" class="nl-form" accept-charset="UTF-8">
+      <input type="hidden" name="form_type" value="customer">
+      <input type="email" name="contact[email]" class="nl-input" placeholder="Enter your email address" required>
+      <button type="submit" class="btn btn-primary nl-btn">Join Now</button>
+    </form>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    { "type": "text", "id": "title", "default": "Join the Atelier Circle" },
+    { "type": "text", "id": "text", "default": "Get exclusive access to new drops, private events, and insider rewards." }
+  ],
+  "presets": [ { "name": "Newsletter Box" } ]
+}
+{% endschema %}

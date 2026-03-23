@@ -33,9 +33,9 @@
     flex-direction: column;
     
     /* Glassmorphism */
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     box-shadow: -10px 0 40px rgba(27, 38, 59, 0.1);
   }
 
@@ -119,10 +119,13 @@
   /* Cart Footer */
   .cart-footer {
     padding: var(--spacing-md);
-    background: var(--color-bg);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-top: 1px solid rgba(27, 38, 59, 0.1);
     position: sticky;
     bottom: 0;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.08);
   }
 
   .cart-subtotal {
