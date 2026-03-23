@@ -31,6 +31,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Performance & Preload -->
+    <link rel="preload" as="style" href="{{ 'global.css' | asset_url }}">
+    
     <!-- Shopify Core Hooks -->
     {{ content_for_header }}
 
@@ -40,29 +43,110 @@
       Shopify.routes = Shopify.routes || {};
       Shopify.routes.root = "{{ routes.root_url }}";
     </script>
+    
+    <style>
+      /* Accessibility & Focus Hooks */
+      .skip-to-content-link:focus {
+        z-index: 9999;
+        position: inherit;
+        top: 0;
+        left: 0;
+        background: #fff;
+        padding: 10px;
+      }
+      
+      /* Essential Visual Smoothing */
+      body { opacity: 0; transition: opacity 0.4s ease-in; }
+      body.js-ready { opacity: 1; }
+    </style>
   </head>
 
-  <body class="template-{{ request.page_type | handle }}">
+  <body class="template-{{ request.page_type | handle }} antialiased overflow-x-hidden">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       Skip to content
     </a>
 
-    <!-- Global Header -->
-    {% section 'header' %}
+    <!-- Accessibility Announcement -->
+    <div id="AccessibilityAnnouncement" class="visually-hidden" aria-live="polite"></div>
 
-    <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+    <!-- Global Header Component -->
+    <header role="banner">
+      {% section 'header' %}
+    </header>
+
+    <!-- Main Content Injection -->
+    <main id="MainContent" class="content-for-layout focus-none outline-none" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
 
-    <!-- Global Footer -->
-    {% section 'footer' %}
+    <!-- Pre-Footer Breadcrumbs (SEO Depth) -->
+    {%- unless template == 'index' or template == 'cart' or template == 'list-collections' or template == '404' -%}
+      <div class="container" style="margin: 20px auto; font-size: 0.8rem; color: var(--color-text-light);">
+        <nav aria-label="breadcrumbs">
+          <a href="/" title="Home">Home</a>
+          {%- if template contains 'page' -%}
+            <span aria-hidden="true">&rsaquo;</span>
+            <span>{{ page.title }}</span>
+          {%- elsif template contains 'product' -%}
+            {%- if collection.url -%}
+              <span aria-hidden="true">&rsaquo;</span>
+              {{ collection.title | link_to: collection.url }}
+            {%- endif -%}
+            <span aria-hidden="true">&rsaquo;</span>
+            <span>{{ product.title }}</span>
+          {%- elsif template contains 'collection' and collection.handle -%}
+            <span aria-hidden="true">&rsaquo;</span>
+            {%- if current_tags -%}
+              {%- capture url -%}/collections/{{ collection.handle }}{%- endcapture -%}
+              {{ collection.title | link_to: url }}
+              <span aria-hidden="true">&rsaquo;</span>
+              <span>{{ current_tags | join: " + " }}</span>
+            {%- else -%}
+              <span>{{ collection.title }}</span>
+            {%- endif -%}
+          {%- elsif template == 'blog' -%}
+            <span aria-hidden="true">&rsaquo;</span>
+            {%- if current_tags -%}
+              {{ blog.title | link_to: blog.url }}
+              <span aria-hidden="true">&rsaquo;</span>
+              <span>{{ current_tags | join: " + " }}</span>
+            {%- else -%}
+              <span>{{ blog.title }}</span>
+            {%- endif -%}
+          {%- elsif template == 'article' -%}
+            <span aria-hidden="true">&rsaquo;</span>
+            {{ blog.title | link_to: blog.url }}
+            <span aria-hidden="true">&rsaquo;</span>
+            <span>{{ article.title }}</span>
+          {%- else -%}
+            <span aria-hidden="true">&rsaquo;</span>
+            <span>{{ page_title }}</span>
+          {%- endif -%}
+        </nav>
+      </div>
+    {%- endunless -%}
 
-    <!-- Overlay & Conversion Layers -->
-    {% section 'cart-drawer' %}
+    <!-- Global Footer Component -->
+    <footer role="contentinfo">
+      {% section 'footer' %}
+    </footer>
+
+    <!-- Overlay & Conversion Layers (Cart Drawer) -->
+    <div id="GlobalModals">
+      {% section 'cart-drawer' %}
+    </div>
     
+    <!-- Conditional Product Bars -->
     {%- if request.page_type == 'product' -%}
       {% section 'sticky-atc' %}
     {%- endif -%}
+
+    <!-- Visual Readiness Trigger -->
+    <script>
+      window.addEventListener('load', () => {
+        document.body.classList.add('js-ready');
+      });
+    </script>
 
   </body>
 </html>
