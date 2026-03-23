@@ -121,13 +121,17 @@
         </div>
       </a>
     {% else %}
-      {% for i in (1..8) %}
-        <a href="/" class="product-card">
+      {% comment %} 
+        Digital Atelier Empty State - Luxury Placeholders 
+        Shopify supports product-1 through product-6.
+      {% endcomment %}
+      {% for i in (1..6) %}
+        <a href="/" class="product-card animate-fade-up" style="animation-delay: {{ i | times: 0.1 }}s">
           <div class="card-media">
             {{ 'product-' | append: i | placeholder_svg_tag: 'placeholder-svg primary-img' }}
           </div>
           <div class="card-info">
-            <h3 class="card-title">Exquisite Piece {{ i }}</h3>
+            <h3 class="card-title">Atelier Piece 0{{ i }}</h3>
             <div class="card-price">$450.00</div>
           </div>
         </a>
