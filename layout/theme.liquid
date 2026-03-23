@@ -4,6 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+    <!-- Atelier Global Store - CSS ABSOLUTE PRIORITY -->
+    {{ 'global.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+
     <meta name="theme-color" content="#1B263B">
     <link rel="canonical" href="{{ canonical_url }}">
     
@@ -24,11 +29,7 @@
     <!-- Google Fonts: Montserrat (Heading) & Inter (Body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Global CSS Framework -->
-    {{ 'global.css' | asset_url | stylesheet_tag }}
-    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Shopify Core Hooks -->
     {{ content_for_header }}
