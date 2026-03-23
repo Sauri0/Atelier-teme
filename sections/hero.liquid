@@ -65,6 +65,8 @@
   <!-- Dynamic Media Handling (Video or Image) -->
   {%- if section.settings.video != blank -%}
     {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, class: 'hero-media' }}
+  {%- elsif section.settings.external_image != blank -%}
+    <img src="{{ section.settings.external_image }}" alt="Hero Background" class="hero-media" loading="eager">
   {%- elsif section.settings.image != blank -%}
     <img 
       src="{{ section.settings.image | image_url: width: 2000 }}" 
@@ -110,6 +112,12 @@
       "type": "image_picker",
       "id": "image",
       "label": "Hero Image (Fallback)"
+    },
+    {
+      "type": "text",
+      "id": "external_image",
+      "label": "External Image URL (Unsplash)",
+      "info": "Overrides the image picker with a direct external URL."
     },
     {
       "type": "video",
