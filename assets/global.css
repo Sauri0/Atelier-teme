@@ -80,7 +80,7 @@ a {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #006a65, var(--color-primary));
+  background: #FF00FF !important; /* Visual Proof of Life (Fuchsia) */
   color: white;
   box-shadow: var(--shadow-subtle);
 }
