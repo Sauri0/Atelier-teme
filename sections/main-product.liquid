@@ -26,6 +26,8 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
+    opacity: 0;
+    animation: fadeUp 1s ease 0.2s forwards;
   }
 
   @media (min-width: 1024px) {
@@ -178,7 +180,7 @@
 
 </style>
 
-<section class="product-section container">
+<section class="product-section container animate-fade-up">
   <div class="product-layout">
     
     <!-- LEFT COLUMN: Media -->

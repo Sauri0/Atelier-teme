@@ -64,7 +64,7 @@
   }
 </style>
 
-<section class="hero-section">
+<section class="hero-section animate-fade-up">
   <!-- Dynamic Media Handling (Video or Image) -->
   {%- if section.settings.video != blank -%}
     {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, class: 'hero-media' }}

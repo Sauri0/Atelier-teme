@@ -183,14 +183,27 @@
   <div class="cart-body" id="CartDrawerBody">
     {%- if cart.item_count > 0 -%}
       {%- for item in cart.items -%}
-        <!-- Simplified item structure for brevity -->
-        <div class="cart-item" style="display:flex; gap:16px; margin-bottom:16px;">
-          <img src="{{ item.image | image_url: width: 100 }}" width="80" height="80" style="object-fit:cover; border-radius:8px;">
-          <div style="flex-grow:1;">
-            <div style="font-weight:600; font-family:var(--font-heading);">{{ item.product.title }}</div>
-            <div style="color:var(--color-accent);">{{ item.final_line_price | money }}</div>
-            <!-- Quantity logic (AJAX omitted for simplicity but structure exists) -->
-            <button class="js-remove" data-key="{{ item.key }}" style="border:none; background:none; color:var(--color-text-light); text-decoration:underline; cursor:pointer;">Remove</button>
+        <div class="cart-item" style="display:flex; gap:16px; margin-bottom:24px; position: relative;" data-key="{{ item.key }}">
+          <div style="flex-shrink:0;">
+            <img src="{{ item.image | image_url: width: 140 }}" width="90" height="110" style="object-fit:cover; border-radius:8px; background:var(--color-surface);">
+          </div>
+          <div style="flex-grow:1; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-weight:600; font-family:var(--font-heading); color:var(--color-accent); font-size:1rem; margin-bottom:4px;">{{ item.product.title }}</div>
+              {%- unless item.product.has_only_default_variant -%}
+                <div style="font-size:0.8rem; color:var(--color-text-light); margin-bottom:8px;">{{ item.variant.title }}</div>
+              {%- endunless -%}
+              <div style="color:var(--color-accent); font-weight:700;">{{ item.final_line_price | money }}</div>
+            </div>
+            
+            <div style="display:flex; align-items:center; gap:12px; margin-top:12px;">
+              <div class="quantity-selector" style="display:flex; align-items:center; border:1px solid rgba(27,38,59,0.1); border-radius:20px; padding:4px 12px; gap:12px;">
+                <button class="js-qty-btn" data-action="minus" data-key="{{ item.key }}" style="background:none; border:none; cursor:pointer; font-size:1.2rem; padding:0 4px;">-</button>
+                <span style="font-size:0.9rem; font-weight:600; min-width:12px; text-align:center;">{{ item.quantity }}</span>
+                <button class="js-qty-btn" data-action="plus" data-key="{{ item.key }}" style="background:none; border:none; cursor:pointer; font-size:1.2rem; padding:0 4px;">+</button>
+              </div>
+              <button class="js-remove" data-key="{{ item.key }}" style="border:none; background:none; color:var(--color-text-light); text-decoration:underline; cursor:pointer; font-size:0.8rem;">Remove</button>
+            </div>
           </div>
         </div>
       {%- endfor -%}
@@ -240,62 +253,82 @@
     bindEvents() {
       this.closeBtn.addEventListener('click', () => this.close());
       this.overlay.addEventListener('click', () => this.close());
+      
+      // Global updated trigger
       document.addEventListener('cart:updated', () => this.fetchCartAndRender());
       
-      // Accessibility: Trap Focus
-      this.drawer.addEventListener('keydown', (e) => this.trapFocus(e));
-      
-      // Quick add upsell logic
-      document.querySelectorAll('.js-quick-add').forEach(btn => {
-        btn.addEventListener('click', (e) => this.quickAdd(e.target.dataset.variantId));
+      // Delegate Item Actions (Qty and Remove)
+      this.drawer.addEventListener('click', (e) => {
+        const qtyBtn = e.target.closest('.js-qty-btn');
+        if (qtyBtn) {
+          const action = qtyBtn.dataset.action;
+          const key = qtyBtn.dataset.key;
+          const currentQty = parseInt(qtyBtn.parentElement.querySelector('span').innerText);
+          const newQty = action === 'plus' ? currentQty + 1 : currentQty - 1;
+          this.updateQuantity(key, newQty);
+          return;
+        }
+
+        const removeBtn = e.target.closest('.js-remove');
+        if (removeBtn) {
+          this.updateQuantity(removeBtn.dataset.key, 0);
+          return;
+        }
+        
+        const quickAddBtn = e.target.closest('.js-quick-add');
+        if (quickAddBtn) {
+          this.quickAdd(quickAddBtn.dataset.variantId);
+        }
       });
+      
+      this.drawer.addEventListener('keydown', (e) => this.trapFocus(e));
     }
 
-    open() {
-      this.drawer.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-      localStorage.setItem('cartOpen', 'true');
-      this.closeBtn.focus();
-    }
-
-    close() {
-      this.drawer.classList.remove('is-open');
-      document.body.style.overflow = '';
-      localStorage.removeItem('cartOpen');
-    }
-
-    checkLocalStorage() {
-      if (localStorage.getItem('cartOpen') === 'true') {
-        this.open();
+    setLoading(state) {
+      if (state) {
+        this.drawer.style.opacity = '0.6';
+        this.drawer.style.pointerEvents = 'none';
+      } else {
+        this.drawer.style.opacity = '1';
+        this.drawer.style.pointerEvents = 'all';
       }
     }
 
-    quickAdd(variantId) {
-      if (!variantId) return;
-      let formData = {
-        'items': [{ 'id': parseInt(variantId), 'quantity': 1 }]
-      };
-      fetch(window.Shopify.routes.root + 'cart/add.js', {
+    updateQuantity(key, quantity) {
+      this.setLoading(true);
+      fetch(window.Shopify.routes.root + 'cart/change.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ id: key, quantity: quantity })
       })
       .then(r => r.json())
-      .then(() => document.dispatchEvent(new CustomEvent('cart:updated')));
+      .then(() => this.fetchCartAndRender())
+      .finally(() => this.setLoading(false));
     }
 
     fetchCartAndRender() {
-      // In production, fetch /cart.js and update DOM securely.
-      // For Phase 4 demo, we reload window safely if it's the simplest state update
-      // OR re-render logic. To strictly follow the prompt "without reloading":
-      fetch('/cart.js')
+      this.setLoading(true);
+      // Section Rendering API: Fetch the new HTML for this specific section
+      fetch(`${window.location.pathname}?sections=cart-drawer`)
         .then(r => r.json())
-        .then(cart => {
-          this.cartTotal = cart.total_price;
-          document.getElementById('CartSubtotal').innerText = Shopify.formatMoney(cart.total_price, this.currencySymbol + '{{amount}}');
+        .then(response => {
+          const html = new DOMParser().parseFromString(response['cart-drawer'], 'text/html');
+          const newBody = html.getElementById('CartDrawerBody').innerHTML;
+          const newFooter = html.querySelector('.cart-footer').innerHTML;
+          const newCount = html.getElementById('cart-icon-bubble')?.innerHTML;
+
+          document.getElementById('CartDrawerBody').innerHTML = newBody;
+          document.querySelector('.cart-footer').innerHTML = newFooter;
+          if (newCount) {
+             const iconBubble = document.getElementById('cart-icon-bubble');
+             if (iconBubble) iconBubble.innerHTML = newCount;
+          }
+          
           this.initShippingBar();
           if(!this.drawer.classList.contains('is-open')) this.open();
-        });
+        })
+        .catch(e => console.error("Cart render error:", e))
+        .finally(() => this.setLoading(false));
     }
 
     initShippingBar() {
