@@ -2,16 +2,75 @@
   "layout": "theme",
   "sections": {
     "hero": {
-      "type": "hero"
+      "type": "hero",
+      "settings": {
+        "title": "Explora Nuestro Atelier Digital",
+        "subtitle": "Materiales premium. Diseño sin fricción. La vanguardia del comercio.",
+        "btn_text": "Descubrir Colección",
+        "btn_link": "shopify:\/\/collections\/all"
+      }
     },
     "trust-banner": {
-      "type": "trust-banner"
+      "type": "trust-banner",
+      "blocks": {
+        "shipping": {
+          "type": "benefit",
+          "settings": {
+            "title": "Envío Gratis Global",
+            "icon": "truck"
+          }
+        },
+        "secure": {
+          "type": "benefit",
+          "settings": {
+            "title": "Pago 100% Seguro",
+            "icon": "lock"
+          }
+        },
+        "support": {
+          "type": "benefit",
+          "settings": {
+            "title": "Soporte Premium 24/7",
+            "icon": "chat"
+          }
+        }
+      },
+      "block_order": [
+        "shipping",
+        "secure",
+        "support"
+      ]
     },
     "collection-list": {
-      "type": "collection-list"
+      "type": "collection-list",
+      "settings": {
+        "title": "Colecciones Centrales"
+      },
+      "blocks": {
+        "c1": {
+          "type": "collection",
+          "settings": {}
+        },
+        "c2": {
+          "type": "collection",
+          "settings": {}
+        },
+        "c3": {
+          "type": "collection",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3"
+      ]
     },
     "featured-products": {
-      "type": "featured-products"
+      "type": "featured-products",
+      "settings": {
+        "title": "Selección Exclusiva"
+      }
     }
   },
   "order": [
