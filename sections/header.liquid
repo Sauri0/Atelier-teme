@@ -131,21 +131,21 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Elite Localization Handler
-    const localizationForms = document.querySelectorAll('localization-form form');
-    localizationForms.forEach(form => {
-      const buttons = form.querySelectorAll('.selector-btn');
-      buttons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          const name = btn.getAttribute('name');
-          const value = btn.getAttribute('value');
-          const hiddenInput = form.querySelector(`input[name="${name}"]`);
-          if (hiddenInput) {
-            hiddenInput.value = value;
-            form.submit();
-          }
-        });
+    // Elite Localization Handler - Simplified for Native Submission
+    const buttons = document.querySelectorAll('.selector-btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const form = this.closest('form');
+        const btnName = this.getAttribute('name');
+        const btnValue = this.getAttribute('value');
+        
+        let targetInputName = btnName === 'language_code' ? 'locale_code' : 'country_code';
+        const hiddenInput = form.querySelector(`input[name="${targetInputName}"]`);
+        
+        if (hiddenInput) {
+          hiddenInput.value = btnValue;
+          // No preventDefault() - allowed to submit naturally
+        }
       });
     });
   });
