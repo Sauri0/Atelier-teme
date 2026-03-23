@@ -44,7 +44,7 @@
   .cart-drawer.is-open {
     transform: translateX(0);
   }
-  .cart-drawer.is-open ~ .cart-overlay {
+  .cart-overlay.is-open {
     opacity: 1;
     visibility: visible;
   }
@@ -54,7 +54,9 @@
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-md);
-    border-bottom: 1px solid rgba(27, 38, 59, 0.1);
+    border-bottom: none;
+    background: var(--surface-low);
+    margin-bottom: var(--spacing-md);
   }
 
   .cart-title {
@@ -285,6 +287,18 @@
       this.drawer.addEventListener('keydown', (e) => this.trapFocus(e));
     }
 
+    open() {
+      this.drawer.classList.add('is-open');
+      this.overlay.classList.add('is-open'); // Sync with overlay
+      document.body.style.overflow = 'hidden'; // Prevent scroll
+    }
+
+    close() {
+      this.drawer.classList.remove('is-open');
+      this.overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
     setLoading(state) {
       if (state) {
         this.drawer.style.opacity = '0.6';
@@ -309,21 +323,15 @@
 
     fetchCartAndRender() {
       this.setLoading(true);
-      // Section Rendering API: Fetch the new HTML for this specific section
       fetch(`${window.location.pathname}?sections=cart-drawer`)
         .then(r => r.json())
         .then(response => {
           const html = new DOMParser().parseFromString(response['cart-drawer'], 'text/html');
           const newBody = html.getElementById('CartDrawerBody').innerHTML;
           const newFooter = html.querySelector('.cart-footer').innerHTML;
-          const newCount = html.getElementById('cart-icon-bubble')?.innerHTML;
-
+          
           document.getElementById('CartDrawerBody').innerHTML = newBody;
           document.querySelector('.cart-footer').innerHTML = newFooter;
-          if (newCount) {
-             const iconBubble = document.getElementById('cart-icon-bubble');
-             if (iconBubble) iconBubble.innerHTML = newCount;
-          }
           
           this.initShippingBar();
           if(!this.drawer.classList.contains('is-open')) this.open();
@@ -334,6 +342,7 @@
 
     initShippingBar() {
       const container = document.getElementById('CartShippingBar');
+      if(!container) return;
       let remainder = this.shippingThreshold - this.cartTotal;
       let percentage = Math.min((this.cartTotal / this.shippingThreshold) * 100, 100);
       
@@ -342,55 +351,48 @@
         : `You are <strong>${Shopify.formatMoney(remainder, this.currencySymbol + '{{amount}}')}</strong> away from Free Shipping!`;
       
       container.innerHTML = `
-        <div class="shipping-message">${message}</div>
-        <div class="progress-bg">
-          <div class="progress-fill" style="width: ${percentage}%"></div>
+        <div class="shipping-message" style="font-size:0.85rem; text-align:center; padding:12px; font-weight:500;">${message}</div>
+        <div class="progress-bg" style="height:4px; background:rgba(0,0,0,0.05); margin:0 12px 12px;">
+          <div class="progress-fill" style="width: ${percentage}%; height:100%; background:var(--color-primary); transition:width 0.4s ease;"></div>
         </div>
       `;
     }
 
     trapFocus(e) {
-      const focusable = this.drawer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      const focusable = this.drawer.querySelectorAll('button, [href], input, select, textarea');
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
 
       if (e.key === 'Tab') {
         if (e.shiftKey && document.activeElement === first) {
-          last.focus();
-          e.preventDefault();
+          last.focus(); e.preventDefault();
         } else if (!e.shiftKey && document.activeElement === last) {
-          first.focus();
-          e.preventDefault();
+          first.focus(); e.preventDefault();
         }
       } else if (e.key === 'Escape') {
         this.close();
       }
     }
+
+    checkLocalStorage() {} // Placeholder
   }
 
-  // Basic formatMoney polyfill if not injected by theme
   window.Shopify = window.Shopify || {};
   Shopify.formatMoney = Shopify.formatMoney || function(cents, format) {
     if (typeof cents == 'string') { cents = cents.replace('.',''); }
     var value = '';
     var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
-    var formatString = (format || this.money_format);
-
+    var formatString = (format || '${{amount}}');
     function defaultOption(opt, def) { return (typeof opt == 'undefined' ? def : opt); }
     function formatWithDelimiters(number, precision, thousands, decimal) {
       precision = defaultOption(precision, 2);
       thousands = defaultOption(thousands, ',');
       decimal   = defaultOption(decimal, '.');
-
       if (isNaN(number) || number == null) { return 0; }
       number = (number/100.0).toFixed(precision);
-
-      var parts   = number.split('.'),
-          dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands),
-          cents   = parts[1] ? (decimal + parts[1]) : '';
+      var parts = number.split('.'), dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands), cents = parts[1] ? (decimal + parts[1]) : '';
       return dollars + cents;
     }
-
     value = formatWithDelimiters(cents, 2);
     return formatString.replace(placeholderRegex, value);
   };
