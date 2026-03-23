@@ -4,26 +4,26 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "external_image": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000&auto=format&fit=crop",
-        "overlay_opacity": 40
+        "external_image": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=2400&auto=format&fit=crop",
+        "overlay_opacity": 30
       },
       "blocks": {
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "The New Standard of Digital Craftsmanship"
+            "heading": "Atelier: The Digital Craftsmanship Epoch"
           }
         },
         "text": {
           "type": "text",
           "settings": {
-            "text": "Elevating your daily experience with premium materials."
+            "text": "Redefining luxury through minimalist architecture and exceptional quality."
           }
         },
         "buttons": {
           "type": "buttons",
           "settings": {
-            "button_label": "Discover",
+            "button_label": "Discover The Collection",
             "button_link": "shopify:\/\/collections\/all"
           }
         }
@@ -33,33 +33,33 @@
     "trust-banner": {
       "type": "trust-banner",
       "blocks": {
-        "shipping": { "type": "benefit", "settings": { "title": "Global Shipping", "icon": "✈️" } },
-        "secure": { "type": "benefit", "settings": { "title": "Secure Payments", "icon": "💳" } },
-        "support": { "type": "benefit", "settings": { "title": "24/7 Concierge", "icon": "💬" } },
-        "materials": { "type": "benefit", "settings": { "title": "Premium Quality", "icon": "✨" } }
+        "shipping": { "type": "benefit", "settings": { "title": "White-Glove Shipping", "icon": "✈️" } },
+        "secure": { "type": "benefit", "settings": { "title": "Encrypted Checkout", "icon": "🔒" } },
+        "support": { "type": "benefit", "settings": { "title": "Style Concierge", "icon": "💬" } },
+        "materials": { "type": "benefit", "settings": { "title": "Artisanal Sourcing", "icon": "✨" } }
       },
       "block_order": [ "shipping", "materials", "secure", "support" ]
     },
     "featured": {
       "type": "featured-products",
       "settings": {
-        "title": "The Atelier Core",
+        "title": "Selected Pieces",
         "products_to_show": 4
       }
     },
     "brand-story": {
       "type": "image-with-text",
       "settings": {
-        "image": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1000&auto=format&fit=crop",
-        "title": "Minimalist Architecture Applied to Lifestyle",
-        "text": "Every detail matters. We strip away the unnecessary, leaving only what is essential and beautiful."
+        "image": "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2000&auto=format&fit=crop",
+        "title": "A Legacy of Pure Essentialism",
+        "text": "Our narrative is woven into every stitch. We strip away the noise to showcase the soul of premium craftsmanship."
       }
     },
     "newsletter": {
       "type": "newsletter",
       "settings": {
-        "title": "Join the Atelier Circle",
-        "text": "Get exclusive access to new drops."
+        "title": "Enter The Atelier Circle",
+        "text": "Join our private network for exclusive access to bespoke drops and events."
       }
     }
   },
