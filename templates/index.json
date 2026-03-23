@@ -11,13 +11,13 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Atelier High-End Boutique"
+            "heading": "The New Standard of Digital Craftsmanship"
           }
         },
         "text": {
           "type": "text",
           "settings": {
-            "text": "Minimalist aesthetics and luxury craftsmanship."
+            "text": "Elevating your daily experience with premium materials."
           }
         },
         "buttons": {
@@ -34,16 +34,61 @@
         "buttons"
       ]
     },
+    "trust-banner": {
+      "type": "trust-banner",
+      "blocks": {
+        "shipping": {
+          "type": "benefit",
+          "settings": {
+            "title": "Worldwide Shipping",
+            "icon": "✈️"
+          }
+        },
+        "secure": {
+          "type": "benefit",
+          "settings": {
+            "title": "Secure Checkout",
+            "icon": "🔒"
+          }
+        },
+        "support": {
+          "type": "benefit",
+          "settings": {
+            "title": "24/7 Support",
+            "icon": "💬"
+          }
+        },
+        "materials": {
+          "type": "benefit",
+          "settings": {
+            "title": "Premium Materials",
+            "icon": "✨"
+          }
+        }
+      },
+      "block_order": [
+        "shipping",
+        "secure",
+        "support",
+        "materials"
+      ]
+    },
     "featured": {
       "type": "featured-products",
       "settings": {
         "title": "Exclusive Curated Selection",
         "products_to_show": 4
       }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "settings": {}
     }
   },
   "order": [
     "hero",
-    "featured"
+    "trust-banner",
+    "featured",
+    "testimonials"
   ]
 }

@@ -1,0 +1,52 @@
+{% comment %}
+  Luxury Testimonials Section
+{% endcomment %}
+
+<style>
+  .testimonials-wrapper { margin: var(--spacing-xl) 0; padding: var(--spacing-xl) 0; background-color: var(--color-surface); }
+  .testi-grid { display: grid; grid-template-columns: 1fr; gap: var(--spacing-lg); }
+  @media(min-width: 768px) { .testi-grid { grid-template-columns: repeat(3, 1fr); } }
+  
+  .testi-card {
+    background: #FFF;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: var(--shadow-subtle);
+  }
+  .testi-stars { color: #F5A623; margin-bottom: 12px; font-size: 1.2rem; }
+  .testi-quote { font-family: var(--font-body); font-style: italic; color: var(--color-text-main); margin-bottom: 16px; }
+  .testi-author { font-family: var(--font-heading); font-weight: 700; color: var(--color-accent); font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase; }
+</style>
+
+<div class="testimonials-wrapper">
+  <div class="container">
+    <h2 style="text-align:center; margin-bottom: 40px; color: var(--color-accent); font-family: var(--font-heading);">What Our Clients Say</h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"The craftsmanship is unparalleled. I've never experienced such attention to detail in digital accessories before."</p>
+        <div class="testi-author">Eleanor R. — New York</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Atelier has redefined my standard for luxury. The shipping was incredibly fast and the packaging was an experience itself."</p>
+        <div class="testi-author">Julian M. — London</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"From the secure checkout to the premium materials, everything feels exquisitely designed and perfectly executed."</p>
+        <div class="testi-author">Claire D. — Paris</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Testimonial Slider",
+  "presets": [
+    { "name": "Testimonial Slider" }
+  ]
+}
+{% endschema %}

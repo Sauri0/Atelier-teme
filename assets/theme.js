@@ -1,18 +1,39 @@
-/* Atelier Global Store - Core JS */
+/* 
+  Atelier Global Theme JS
+*/
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Global helpers can go here. 
-  // Cart drawer explicitly listens to specific triggers
+  // Cart Drawer Logic
+  const cartDrawer = document.getElementById('CartDrawer');
+  const cartOverlay = document.getElementById('CartOverlay');
   const cartTriggers = document.querySelectorAll('.js-cart-trigger');
   
-  cartTriggers.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if(window.themeCart) {
-        window.themeCart.open();
-      }
-    });
+  const openCart = (e) => {
+    if(e) e.preventDefault();
+    if(cartDrawer) {
+      cartDrawer.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  const closeCart = () => {
+    if(cartDrawer) {
+      cartDrawer.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+  };
+
+  // Bind Open Buttons
+  cartTriggers.forEach(trigger => {
+    trigger.addEventListener('click', openCart);
   });
 
-  console.log("Atelier Core Interface Loaded.");
+  // Bind Close Buttons
+  if(cartOverlay) {
+    cartOverlay.addEventListener('click', closeCart);
+  }
+  const closeBtn = document.getElementById('CloseCartBtn');
+  if(closeBtn) {
+    closeBtn.addEventListener('click', closeCart);
+  }
 });
