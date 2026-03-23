@@ -49,11 +49,15 @@
       "blocks": {
         "c1": {
           "type": "collection",
-          "settings": {}
+          "settings": {
+            "collection": "frontpage"
+          }
         },
         "c2": {
           "type": "collection",
-          "settings": {}
+          "settings": {
+            "collection": "all"
+          }
         },
         "c3": {
           "type": "collection",
@@ -69,7 +73,8 @@
     "featured-products": {
       "type": "featured-products",
       "settings": {
-        "title": "Selección Exclusiva"
+        "title": "Selección Exclusiva",
+        "products_to_show": 4
       }
     }
   },

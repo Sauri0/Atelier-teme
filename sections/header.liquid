@@ -101,7 +101,7 @@
       {%- endif -%}
       
       <!-- Side Cart Trigger -->
-      <a href="{{ routes.cart_url }}" class="icon-btn cart-trigger" id="cart-icon-bubble">
+      <a href="javascript:void(0)" class="icon-btn cart-trigger js-cart-trigger" id="cart-icon-bubble">
         {% render 'icon-cart' %}
         <div class="cart-count-bubble">
           {%- if cart.item_count > 0 -%}
