@@ -1,0 +1,23 @@
+{
+  "layout": "theme",
+  "sections": {
+    "hero": {
+      "type": "hero"
+    },
+    "trust-banner": {
+      "type": "trust-banner"
+    },
+    "collection-list": {
+      "type": "collection-list"
+    },
+    "featured-products": {
+      "type": "featured-products"
+    }
+  },
+  "order": [
+    "hero",
+    "trust-banner",
+    "collection-list",
+    "featured-products"
+  ]
+}

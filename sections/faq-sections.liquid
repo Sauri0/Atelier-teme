@@ -1,0 +1,234 @@
+{% comment %}
+  FAQ Section - Accessible Accordions with Search
+{% endcomment %}
+
+<style>
+  .faq-section {
+    padding: var(--spacing-xl) 0;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .faq-search-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto var(--spacing-xl);
+  }
+
+  .faq-search-input {
+    width: 100%;
+    padding: 16px 24px;
+    padding-left: 48px;
+    border: 1px solid rgba(27, 38, 59, 0.1);
+    border-radius: 30px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    box-shadow: var(--shadow-subtle);
+  }
+
+  .faq-search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    fill: var(--color-primary); /* Aqua Green */
+  }
+
+  .faq-category {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .faq-category-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--color-surface);
+  }
+
+  .faq-accordion {
+    margin-bottom: var(--spacing-sm);
+    background: var(--color-bg);
+    border: 1px solid rgba(27, 38, 59, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .faq-accordion summary {
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--color-text-main);
+    padding: 16px var(--spacing-md);
+    cursor: pointer;
+    list-style: none; /* Hide default arrow */
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--color-surface);
+    transition: var(--transition-base);
+  }
+
+  .faq-accordion summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-accordion summary:hover {
+    background: #f0f2f4;
+  }
+
+  .faq-icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+  }
+
+  .faq-icon::before, .faq-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--color-primary);
+    transition: transform 0.3s ease;
+  }
+
+  .faq-icon::before {
+    top: 11px;
+    left: 4px;
+    width: 16px;
+    height: 2px;
+  }
+
+  .faq-icon::after {
+    top: 4px;
+    left: 11px;
+    width: 2px;
+    height: 16px;
+  }
+
+  .faq-accordion[open] summary .faq-icon::after {
+    transform: rotate(90deg);
+  }
+
+  .faq-content {
+    padding: var(--spacing-md);
+    color: var(--color-text-light);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    border-top: 1px solid rgba(27, 38, 59, 0.05);
+  }
+</style>
+
+<div class="container faq-section">
+  <div class="faq-header">
+    <h2>{{ section.settings.title | escape }}</h2>
+  </div>
+
+  <div class="faq-search-wrapper">
+    <!-- SVG Search Icon -->
+    <svg class="faq-search-icon" viewBox="0 0 24 24">
+      <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+    </svg>
+    <input type="text" id="faqSearch" class="faq-search-input" placeholder="Search FAQs..." onkeyup="filterFAQs()">
+  </div>
+
+  <div class="faq-list" id="faqList">
+    <!-- We simulate Categories as Blocks in Schema usually, mapped here -->
+    {%- assign current_category = '' -%}
+    
+    {%- for block in section.blocks -%}
+      {%- if block.settings.category != current_category -%}
+        {%- if forloop.index > 1 -%} </div> {%- endif -%}
+        <div class="faq-category">
+          <h3 class="faq-category-title">{{ block.settings.category }}</h3>
+        {%- assign current_category = block.settings.category -%}
+      {%- endif -%}
+
+      <details class="faq-accordion js-faq-item" {{ block.shopify_attributes }}>
+        <summary>
+          <span class="faq-question">{{ block.settings.question | escape }}</span>
+          <span class="faq-icon"></span>
+        </summary>
+        <div class="faq-content">
+          {{ block.settings.answer }}
+        </div>
+      </details>
+      
+      {%- if forloop.last -%} </div> {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+<script>
+  function filterFAQs() {
+    const input = document.getElementById('faqSearch');
+    const filter = input.value.toLowerCase();
+    const items = document.querySelectorAll('.js-faq-item');
+    
+    items.forEach(item => {
+      const question = item.querySelector('.faq-question').innerText.toLowerCase();
+      const answer = item.querySelector('.faq-content').innerText.toLowerCase();
+      
+      if (question.includes(filter) || answer.includes(filter)) {
+        item.style.display = "";
+      } else {
+        item.style.display = "none";
+      }
+    });
+
+    // Hide empty category headers
+    document.querySelectorAll('.faq-category').forEach(cat => {
+      const visibleItems = Array.from(cat.querySelectorAll('.js-faq-item')).filter(i => i.style.display !== "none");
+      cat.querySelector('.faq-category-title').style.display = visibleItems.length > 0 ? "" : "none";
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Accordions",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Frequently Asked Questions",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category (e.g. Shipping, Returns)",
+          "default": "General"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium FAQs"
+    }
+  ]
+}
+{% endschema %}

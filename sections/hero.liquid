@@ -1,0 +1,209 @@
+{% comment %}
+  Hero Section - Media Rich & High Conversion
+{% endcomment %}
+
+<style>
+  .hero-section {
+    position: relative;
+    width: 100%;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: {{ section.settings.alignment }};
+    overflow: hidden;
+  }
+  
+  .hero-media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(27, 38, 59, {{ section.settings.overlay_opacity | divided_by: 100.0 }});
+    z-index: 0;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    padding: var(--spacing-xl);
+    text-align: {{ section.settings.text_alignment }};
+    color: #FFF;
+  }
+
+  .hero-heading {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: var(--spacing-md);
+    color: #FFF; /* Ovewrites global heading color for contrast */
+  }
+
+  .hero-subtext {
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.9;
+  }
+
+  /* Floating Primary CTA */
+  .hero-cta {
+    font-size: 1.125rem;
+    padding: 16px 32px;
+  }
+</style>
+
+<section class="hero-section">
+  <!-- Dynamic Media Handling (Video or Image) -->
+  {%- if section.settings.video != blank -%}
+    {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, class: 'hero-media' }}
+  {%- elsif section.settings.image != blank -%}
+    <img 
+      src="{{ section.settings.image | image_url: width: 2000 }}" 
+      alt="{{ section.settings.image.alt | escape }}" 
+      class="hero-media"
+      loading="eager"
+      width="{{ section.settings.image.width }}"
+      height="{{ section.settings.image.height }}"
+    >
+  {%- else -%}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-media placeholder-svg' }}
+  {%- endif -%}
+
+  <div class="hero-overlay"></div>
+
+  <div class="container hero-content">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'heading' -%}
+          <h1 class="hero-heading" {{ block.shopify_attributes }}>{{ block.settings.heading | escape }}</h1>
+        {%- when 'text' -%}
+          <p class="hero-subtext" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</p>
+        {%- when 'buttons' -%}
+          <div class="hero-actions" {{ block.shopify_attributes }}>
+            {%- if block.settings.button_link != blank and block.settings.button_label != blank -%}
+              <a href="{{ block.settings.button_link }}" class="btn btn-primary hero-cta">
+                {{ block.settings.button_label | escape }}
+              </a>
+            {%- endif -%}
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Rich Media",
+  "tag": "section",
+  "class": "section-hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero Image (Fallback)"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Hero Video (High Res)"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "Overlay Opacity (Navy Green)",
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Content Alignment (Flex)",
+      "options": [
+        {"value": "flex-start", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "flex-end", "label": "Right"}
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ],
+      "default": "left"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Elevate Your Lifestyle.",
+          "label": "Heading"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Discover premium quality designed for the modern era.",
+          "label": "Subheading"
+        }
+      ]
+    },
+    {
+      "type": "buttons",
+      "name": "Buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Shop the Collection",
+          "label": "Button Label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Rich Media",
+      "blocks": [
+        {"type": "heading"},
+        {"type": "text"},
+        {"type": "buttons"}
+      ]
+    }
+  ]
+}
+{% endschema %}
